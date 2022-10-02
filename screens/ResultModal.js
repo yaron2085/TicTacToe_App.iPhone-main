@@ -1,6 +1,5 @@
 import { Text, View, LogBox, TouchableOpacity } from 'react-native';
 import { mainApp } from '../styles/styles';
-import { useNavigation } from '@react-navigation/native';
 
 // LogBox.ignoreLogs([
 //   'Non-serializable values were found in the navigation state.',
@@ -9,7 +8,6 @@ LogBox.ignoreAllLogs();
 
 export default function ResultModal({ route, navigation }) {
   const { result, newGame } = route.params;
-  console.log('console.log(newGame', newGame);
   //const navigation = useNavigation();
 
   function onPressHandler() {

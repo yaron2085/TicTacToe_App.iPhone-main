@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { Text, View, LogBox } from 'react-native';
 import Board from './Board';
 import { mainApp } from '../styles/styles';
-import { Text, View } from 'react-native';
+const URL = 'http://www.whatyouwant.somee.com/api/Games';
+
+LogBox.ignoreAllLogs();
 
 export default function Game({ navigation }) {
+  const [gameResult, setGameResult] = useState({
+    p1: '',
+    p2: '',
+  });
   const [modal, toggleModal] = useState(false);
 
   //Player, game, and modal states
   const [playerTurn, changeTurn] = useState(true);
   const [end, endGame] = useState(false);
-  // const [modal, toggleModal] = useState(false);
 
   //Result message for winner and tie games
   const [result, setResult] = useState('');
@@ -43,6 +49,7 @@ export default function Game({ navigation }) {
         b in turns &&
         c in turns
       ) {
+        //postGameResult();
         //Winner is determined
         setResult(
           playerTurn ? 'Congratulations Player 1!' : 'Nice going Player 2!'
@@ -57,6 +64,20 @@ export default function Game({ navigation }) {
       finishGame();
     }
   }
+  const postGameResult = async () => {
+    setGameResult;
+    fetch(URL + '/SetGameResults', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        player1: gameResult.p1,
+        player2: gameResult.p2,
+      }),
+    });
+  };
 
   function checkTurn(value) {
     const tempTurns = turns;
@@ -81,25 +102,15 @@ export default function Game({ navigation }) {
   const newGame = () => {
     console.log('newGame activated');
     setTurn({});
-    // toggleGame();
-    // triggerModal();
     endGame(false);
     toggleModal(false);
     changeTurn(true);
-    console.log(modal);
   };
-  const move = () => {
-    navigation.navigate('Result Modal', {
-      result: result,
-      newGame: newGame,
-    });
-  };
+
   return (
     <View style={mainApp.container}>
       <Text style={mainApp.paragraph}>Let's play Tic-Tac-Toe</Text>
-      {/* {!end && <Board turns={turns} checkTurn={checkTurn} />} */}
       <Board turns={turns} checkTurn={checkTurn} />
-
       {modal &&
         navigation.navigate('Result Modal', {
           result: result,

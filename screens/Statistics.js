@@ -1,79 +1,98 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
-import { Table, text, Row } from 'react-native-table-component';
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tableHead: ['game 1', 'game 2','game 3'],
-      widthArr: [100,120,140]
-    }
-        }
-  render() {
+import React, { useState, useEffect } from 'react';
+import structuredClone from '@ungap/structured-clone';
+import { Table, Row, Rows, TableWrapper } from 'react-native-table-component';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import styles from '../styles/statsStyle';
+import { Button } from 'react-native-paper';
 
-    const state = this.state;
-    const data = [];
-    for (let i = 0; i < 5; i += 1) {
-      const dataRow = [];
-      for (let j = 0; j < 3; j += 1) {
-        dataRow.push(`${i}${j}`);
-      }
-      data.push(dataRow);
+const Statistics = ({ route }) => {
+  const statsArray = route.params?.stats;
+
+  //const copiedStatist = structuredClone(statsArray);
+  const copiedStatist = JSON.parse(JSON.stringify(statsArray));
+
+  const shortStats = copiedStatist.reduce((acc, curItem) => {
+    const userWins = acc;
+    delete acc.game_Number;
+    userWins.user1_Wins += curItem.user1_Wins;
+    userWins.user2_Wins += curItem.user2_Wins;
+    return { ...acc, ['Games']: statsArray.length };
+  });
+
+  const statisValues = statsArray.map(function (obj) {
+    if (obj.user1_Wins === 1) {
+      return [obj.game_Number, 'Player 1', 'Player 2'];
+    } else if (obj.user1_Wins === 0 && obj.user2_Wins === 0) {
+      return [obj.game_Number, 'none', 'none'];
+    } else {
+      return [obj.game_Number, 'Player 2', 'Player 1'];
     }
-    return (
-      <View style={styles.container}>
-        <ScrollView horizontal={true}>
-          <View>
-            <Table borderStyle={{borderColor: '#C1C0B9'}}>
-              <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
+  });
+  console.log('stats_Values', statisValues);
+
+  const CONTENT = {
+    tableHead: ['Game number', 'Winner', 'Looser'],
+    widthArr: [100, 135, 135],
+    statisValues,
+  };
+
+  return (
+    <View style={styles.container}>
+      <ScrollView horizontal={true}>
+        <View>
+          <Table borderStyle={{ borderColor: '#c8e1ff', borderWidth: 3 }}>
+            <Row
+              data={CONTENT.tableHead}
+              widthArr={CONTENT.widthArr}
+              style={styles.head}
+              textStyle={styles.text}
+            />
+          </Table>
+          <ScrollView style={styles.dataWrapper}>
+            <Table borderStyle={{ borderColor: '#c8e1ff', borderWidth: 3 }}>
+              {CONTENT.statisValues.map((dataRow, index) => (
+                <Row
+                  key={index}
+                  data={dataRow}
+                  widthArr={CONTENT.widthArr}
+                  style={[
+                    styles.row,
+                    index % 2 && { backgroundColor: '#ffffff' },
+                  ]}
+                  textStyle={styles.text}
+                />
+              ))}
             </Table>
-            <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderColor: '#C1C0B9'}}>
-                {
-                  data.map((dataRow, index) => (
-                    <Row
-                      key={index}
-                      data={dataRow}
-                      widthArr={state.widthArr}
-                      style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
-                      textStyle={styles.text}
-                    />
-                  ))
-                }
-                
-              </Table>
-            </ScrollView>
-          </View>
-          
-        </ScrollView>
-        
-        
+          </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+export default Statistics;
+
+{
+  /* <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <View style={styles.title}>
+          <Text>{'item1'}</Text>
+        </View>
+        <View style={styles.result}>
+          <Text>{'item2'}</Text>
+        </View>
       </View>
-    )
-    
-  }
-  
+      <Text style={styles.statsText}>
+        <span style={styles.title}>Player 1 wins</span>
+        <span style={styles.result}>{shortStats.user1_Wins}</span>
+      </Text>
+
+      <Text>
+        Player 2 wins <span>{shortStats.user2_Wins}</span>
+      </Text>
+      <Text>
+        Total games <span>{shortStats.Games}</span>
+      </Text> */
 }
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    padding: 16, 
-    paddingTop: 30, 
-    backgroundColor: '#ffffff' 
-  },
-  head: { 
-    height: 50, 
-    backgroundColor: '#6F7BD9' 
-  },
-  text: { 
-    textAlign: 'center', 
-    fontWeight: '200' 
-  },
-  dataWrapper: { 
-    marginTop: -1 
-  },
-  row: { 
-    height: 40, 
-    backgroundColor: '#F7F8FA' 
-  }
-});

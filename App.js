@@ -1,24 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Statistics from './screens/Statistics';
 import Game from './screens/Game';
 import ResultModal from './screens/ResultModal';
 
+const URL = 'http://www.whatyouwant.somee.com/api/Games';
+
 export default function App() {
+  const [stats, setStats] = useState([]);
+  const [load, setLoad] = useState(true);
+
+  const getFromApi = () => {
+    console.log('start getFromApi');
+
+    return fetch(URL + '/GamesList', {})
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.liststats);
+        setStats(data.liststats);
+        setLoad(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getFromApi();
+  }, []);
+
   const Stack = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Game Screen'>
-        <Stack.Group>
-          <Stack.Screen name='Game Screen' component={Game} />
-          <Stack.Screen name='Statics Screen' component={Statistics} />
-        </Stack.Group>
-        <Stack.Group screenOptions={{ presentation: 'modal' }}>
-          <Stack.Screen name='Result Modal' component={ResultModal} />
-        </Stack.Group>
-      </Stack.Navigator>
+      {load ? null : (
+        <Stack.Navigator initialRouteName='Game Screen'>
+          <Stack.Group>
+            <Stack.Screen name='Game Screen' component={Game} />
+            <Stack.Screen
+              name='Statics Screen'
+              component={Statistics}
+              initialParams={{ stats: stats }}
+            />
+          </Stack.Group>
+          <Stack.Group screenOptions={{ presentation: 'card' }}>
+            <Stack.Screen name='Result Modal' component={ResultModal} />
+          </Stack.Group>
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
+
+//in package.json - didn't work
+//"proxy": "http://localhost:19006"
