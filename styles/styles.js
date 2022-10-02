@@ -11,7 +11,7 @@ const mainApp = StyleSheet.create({
     margin: 22,
     fontSize: 23,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign:'center',
     color: 'white',
   },
   subheader: {
@@ -26,12 +26,12 @@ const mainApp = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  // centeredView: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: '#C6DDD2',
-  // },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#C6DDD2',
+  },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
@@ -72,27 +72,31 @@ const mainApp = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+
+  
+
 });
 
 const spaceStyle = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   space: {
-    width: 80,
-    height: 80,
-    marginVertical: 5,
-    marginHorizontal: 5,
-    backgroundColor: 'white',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+     width: 80, 
+     height: 80,
+     marginVertical: 5,
+     marginHorizontal: 5, 
+     backgroundColor: 'white',
+     display: 'flex',
+     justifyContent: 'center',
+     alignItems: 'center'
   },
   spaceValue: {
     fontSize: 40,
-    color: '#080908',
-  },
+    color: '#080908'
+  }
 });
 
 const boardStyle = StyleSheet.create({
@@ -109,4 +113,4 @@ const boardStyle = StyleSheet.create({
   },
 });
 
-export { mainApp, spaceStyle, boardStyle };
+export { mainApp, spaceStyle, boardStyle }

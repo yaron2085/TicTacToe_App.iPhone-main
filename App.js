@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Statistics from './screens/Statistics';
 import Game from './screens/Game';
 import ResultModal from './screens/ResultModal';
-
 const URL = 'http://www.whatyouwant.somee.com/api/Games';
 
 export default function App() {
