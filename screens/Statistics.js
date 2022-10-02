@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import structuredClone from '@ungap/structured-clone';
+//import structuredClone from '@ungap/structured-clone';
 import { Table, Row, Rows, TableWrapper } from 'react-native-table-component';
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import styles from '../styles/statsStyle';
