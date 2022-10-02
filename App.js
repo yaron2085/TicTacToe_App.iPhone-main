@@ -4,7 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Statistics from './screens/Statistics';
 import Game from './screens/Game';
 import ResultModal from './screens/ResultModal';
-const URL = 'http://www.whatyouwant.somee.com/api/Games';
+const URL = 'http://www.whatyouwant.somee.com/api/Games/GamesList';
+
+// npm install  @react-navigation/native @react-navigation/native-stack
 
 export default function App() {
   const [stats, setStats] = useState([]);
@@ -13,7 +15,7 @@ export default function App() {
   const getFromApi = () => {
     console.log('start getFromApi');
 
-    return fetch(URL + '/GamesList', {})
+    return fetch(URL, {})
       .then((res) => res.json())
       .then((data) => {
         console.log(data.liststats);

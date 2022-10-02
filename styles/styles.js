@@ -6,12 +6,13 @@ const mainApp = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#0066cc',
     padding: 8,
+    paddingBottom: '30%',
   },
   paragraph: {
     margin: 22,
     fontSize: 23,
     fontWeight: 'bold',
-    textAlign:'center',
+    textAlign: 'center',
     color: 'white',
   },
   subheader: {
@@ -72,31 +73,37 @@ const mainApp = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
-
-  
-
+  upperContainer: {
+    backgroundColor: '#0066cc',
+    padding: 20,
+  },
+  showStatisBtn: {
+    backgroundColor: '#241239',
+    padding: 5,
+    borderRadius: 5,
+    top: '50%',
+  },
 });
 
 const spaceStyle = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   space: {
-     width: 80, 
-     height: 80,
-     marginVertical: 5,
-     marginHorizontal: 5, 
-     backgroundColor: 'white',
-     display: 'flex',
-     justifyContent: 'center',
-     alignItems: 'center'
+    width: 80,
+    height: 80,
+    marginVertical: 5,
+    marginHorizontal: 5,
+    backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   spaceValue: {
     fontSize: 40,
-    color: '#080908'
-  }
+    color: '#080908',
+  },
 });
 
 const boardStyle = StyleSheet.create({
@@ -113,4 +120,4 @@ const boardStyle = StyleSheet.create({
   },
 });
 
-export { mainApp, spaceStyle, boardStyle }
+export { mainApp, spaceStyle, boardStyle };

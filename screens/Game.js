@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, LogBox } from 'react-native';
+import { Text, View, LogBox, TouchableOpacity } from 'react-native';
 import Board from './Board';
 import { mainApp } from '../styles/styles';
-const URL = 'http://www.whatyouwant.somee.com/api/Games';
+const URL = 'http://www.whatyouwant.somee.com/api/Games/SetGameResults';
 
 LogBox.ignoreAllLogs();
 
@@ -11,6 +11,16 @@ export default function Game({ navigation }) {
     p1: '',
     p2: '',
   });
+
+  useEffect(() => {
+    console.log('useEffect');
+    if (gameResult.p1 && gameResult.p2 !== '' && result !== '') {
+      console.log(typeof gameResult.p1);
+      console.log('calling postResulttoDB function');
+      postResulttoDB();
+    }
+  }, [gameResult, result]);
+
   const [modal, toggleModal] = useState(false);
 
   //Player, game, and modal states
@@ -49,8 +59,10 @@ export default function Game({ navigation }) {
         b in turns &&
         c in turns
       ) {
-        //postGameResult();
         //Winner is determined
+        playerTurn
+          ? setGameResult({ p1: 1, p2: 0 })
+          : setGameResult({ p1: 0, p2: 1 });
         setResult(
           playerTurn ? 'Congratulations Player 1!' : 'Nice going Player 2!'
         );
@@ -61,22 +73,41 @@ export default function Game({ navigation }) {
     //when the board is full with no winner, it results in a tie
     if (Object.keys(turns).length === 9) {
       setResult('Tie Game!');
+      setGameResult({ p1: 0, p2: 0 });
       finishGame();
     }
   }
-  const postGameResult = async () => {
-    setGameResult;
-    fetch(URL + '/SetGameResults', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        player1: gameResult.p1,
-        player2: gameResult.p2,
-      }),
-    });
+  const postResulttoDB = async () => {
+    //let gameData =;
+    try {
+      console.log('starting postResulttoDB function');
+      const fetchResponse = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user1: gameResult.p1,
+          user2: gameResult.p2,
+        }),
+      });
+      const data = await fetchResponse.json();
+      return data;
+    } catch (err) {
+      return console.log('error catch', err);
+    }
+
+    // .then((response) => {
+    //   if (response.ok) {
+    //     return response.json();
+    //   } else {
+    //     throw new Error('Something went wrong');
+    //   }
+    // })
+    // .catch((err) => {
+    //   console.log('error catch', err);
+    // });
   };
 
   function checkTurn(value) {
@@ -106,20 +137,35 @@ export default function Game({ navigation }) {
     toggleModal(false);
     changeTurn(true);
   };
+  function onPressHandler() {
+    navigation.replace('Statics Screen');
+  }
 
   return (
-    <View style={mainApp.container}>
-      <Text style={mainApp.paragraph}>Let's play Tic-Tac-Toe</Text>
-      <Board turns={turns} checkTurn={checkTurn} />
-      {modal &&
-        navigation.navigate('Result Modal', {
-          result: result,
-          newGame: newGame,
-        })}
-      <View style={mainApp.legend}>
-        <Text style={mainApp.subheader}>X - Player 1</Text>
-        <Text style={mainApp.subheader}>O - Player 2</Text>
+    <>
+      <View style={mainApp.upperContainer}>
+        <TouchableOpacity
+          style={mainApp.showStatisBtn}
+          onPress={() => {
+            onPressHandler();
+          }}
+        >
+          <Text style={mainApp.whiteButtonText}>Show Statistics</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+      <View style={mainApp.container}>
+        <Text style={mainApp.paragraph}>Let's play Tic-Tac-Toe</Text>
+        <Board turns={turns} checkTurn={checkTurn} />
+        {modal &&
+          navigation.navigate('Result Modal', {
+            result: result,
+            newGame: newGame,
+          })}
+        <View style={mainApp.legend}>
+          <Text style={mainApp.subheader}>X - Player 1</Text>
+          <Text style={mainApp.subheader}>O - Player 2</Text>
+        </View>
+      </View>
+    </>
   );
 }

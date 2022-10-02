@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 //import structuredClone from '@ungap/structured-clone';
 import { Table, Row, Rows, TableWrapper } from 'react-native-table-component';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles/statsStyle';
+import { mainApp } from '../styles/styles';
+
 import { Button } from 'react-native-paper';
 
-const Statistics = ({ route }) => {
+const Statistics = ({ route, navigation }) => {
   const statsArray = route.params?.stats;
-
   //const copiedStatist = structuredClone(statsArray);
   const copiedStatist = JSON.parse(JSON.stringify(statsArray));
 
@@ -35,38 +36,52 @@ const Statistics = ({ route }) => {
     widthArr: [100, 135, 135],
     statisValues,
   };
-
+  function onPressHandler() {
+    navigation.replace('Game Screen');
+  }
   return (
-    <View style={styles.container}>
-      <ScrollView horizontal={true}>
-        <View>
-          <Table borderStyle={{ borderColor: '#c8e1ff', borderWidth: 3 }}>
-            <Row
-              data={CONTENT.tableHead}
-              widthArr={CONTENT.widthArr}
-              style={styles.head}
-              textStyle={styles.text}
-            />
-          </Table>
-          <ScrollView style={styles.dataWrapper}>
+    <>
+      <View style={mainApp.upperContainer}>
+        <TouchableOpacity
+          style={mainApp.showStatisBtn}
+          onPress={() => {
+            onPressHandler();
+          }}
+        >
+          <Text style={mainApp.whiteButtonText}>Back to Game Board</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
+        <ScrollView horizontal={true}>
+          <View>
             <Table borderStyle={{ borderColor: '#c8e1ff', borderWidth: 3 }}>
-              {CONTENT.statisValues.map((dataRow, index) => (
-                <Row
-                  key={index}
-                  data={dataRow}
-                  widthArr={CONTENT.widthArr}
-                  style={[
-                    styles.row,
-                    index % 2 && { backgroundColor: '#ffffff' },
-                  ]}
-                  textStyle={styles.text}
-                />
-              ))}
+              <Row
+                data={CONTENT.tableHead}
+                widthArr={CONTENT.widthArr}
+                style={styles.head}
+                textStyle={styles.text}
+              />
             </Table>
-          </ScrollView>
-        </View>
-      </ScrollView>
-    </View>
+            <ScrollView style={styles.dataWrapper}>
+              <Table borderStyle={{ borderColor: '#c8e1ff', borderWidth: 3 }}>
+                {CONTENT.statisValues.map((dataRow, index) => (
+                  <Row
+                    key={index}
+                    data={dataRow}
+                    widthArr={CONTENT.widthArr}
+                    style={[
+                      styles.row,
+                      index % 2 && { backgroundColor: '#ffffff' },
+                    ]}
+                    textStyle={styles.text}
+                  />
+                ))}
+              </Table>
+            </ScrollView>
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 export default Statistics;
